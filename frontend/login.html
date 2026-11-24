@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to Forensic Sketch Generator">
+    <title>Forensic Sketch Generator — Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ── Minimal Nav ───────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <a href="/login.html" class="navbar-brand">
+            <div class="badge-icon">🔍</div>
+            <span>Forensic<span class="highlight">Sketch</span></span>
+        </a>
+        <div class="nav-status">
+            <div class="status-dot"></div>
+            <span>Secure Login</span>
+        </div>
+    </nav>
+
+    <!-- ── Auth Container ────────────────────────────────────────────── -->
+    <main class="auth-container">
+        <div class="auth-card fade-in">
+            <div class="auth-header">
+                <div class="auth-icon">🔐</div>
+                <h1>Welcome Back</h1>
+                <p>Sign in to access the Forensic Sketch Generator</p>
+            </div>
+
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required
+                        autocomplete="current-password">
+                </div>
+
+                <button type="submit" id="login-btn" class="btn btn-primary btn-full btn-lg">
+                    🚀 Sign In
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="/signup.html" class="auth-link">Create one</a></p>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/login.js"></script>
+</body>
+
+</html>

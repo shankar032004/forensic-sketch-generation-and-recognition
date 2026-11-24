@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered Forensic Sketch Editor — Modify facial features using inpainting">
+    <title>Forensic Sketch Generator — Editor</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ── Navigation ─────────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <div class="badge-icon">🔍</div>
+            <span>Forensic<span class="highlight">Sketch</span></span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/dashboard.html" id="nav-dashboard">📊 Dashboard</a></li>
+            <li><a href="/" id="nav-generate">🎨 Generate</a></li>
+            <li><a href="/editor.html" class="active" id="nav-editor">✏️ Editor</a></li>
+            <li><a href="/recognition.html" id="nav-recognition">🔎 Recognize</a></li>
+        </ul>
+        <div class="nav-user-area">
+            <span class="nav-username" id="nav-username"></span>
+            <button class="btn-logout" id="logout-btn" title="Logout">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <!-- ── Main Content ───────────────────────────────────────────────── -->
+    <main class="main-content">
+        <div class="section-header fade-in">
+            <h1>Face <span class="accent">Editor</span></h1>
+            <p>Upload a sketch or use a generated one. Select a facial region and describe how you want it modified.</p>
+        </div>
+
+        <div class="grid-2">
+            <!-- ── LEFT: Controls ─────────────────────────────────────── -->
+            <div class="card fade-in" style="animation-delay: 0.1s">
+                <div class="card-title"><span class="icon">📤</span> Input Sketch</div>
+
+                <!-- Upload / drop zone -->
+                <div class="upload-zone" id="upload-zone">
+                    <input type="file" id="file-input" accept="image/*">
+                    <div class="upload-label" id="upload-label">
+                        <div class="icon">📁</div>
+                        <p>Drop an image here or click to upload</p>
+                        <p style="font-size: 0.75rem; margin-top: 0.3rem; color: var(--text-muted);">Or paste a
+                            previously generated sketch</p>
+                    </div>
+                    <img id="input-preview" src="" alt="Input sketch" style="display:none">
+                </div>
+
+                <!-- Region selector -->
+                <div class="form-group" style="margin-top: 1.25rem">
+                    <label for="region-select">Face Region</label>
+                    <select id="region-select">
+                        <option value="eyes">👁️ Eyes</option>
+                        <option value="nose">👃 Nose</option>
+                        <option value="mouth">👄 Mouth</option>
+                        <option value="jaw">🦴 Jawline</option>
+                        <option value="forehead">🧠 Forehead</option>
+                        <option value="hair">💇 Hair</option>
+                        <option value="left_eye">👁️ Left Eye</option>
+                        <option value="right_eye">👁️ Right Eye</option>
+                    </select>
+                </div>
+
+                <!-- Language selector -->
+                <div class="form-group" style="margin-top: 1.25rem">
+                    <label for="language-select">🌐 Input Language</label>
+                    <select id="language-select">
+                        <option value="en">🇬🇧 English</option>
+                        <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                        <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                    </select>
+                </div>
+
+                <!-- Modification description -->
+                <div class="form-group">
+                    <label for="modification-input">Modification</label>
+                    <div class="voice-input-wrapper">
+                        <textarea id="modification-input" rows="3"
+                            placeholder="Example: Make the nose longer and sharper, with a slight hook at the bridge"></textarea>
+                        <button type="button" class="mic-btn" id="mic-btn" title="Click to speak">🎤</button>
+                    </div>
+                    <div class="mic-status" id="mic-status">🔴 Listening…</div>
+                </div>
+
+                <button id="edit-btn" class="btn btn-amber btn-full btn-lg">
+                    ✏️ Apply Edit
+                </button>
+            </div>
+
+            <!-- ── RIGHT: Result ──────────────────────────────────────── -->
+            <div class="card fade-in" style="animation-delay: 0.2s">
+                <div class="card-title"><span class="icon">🖼️</span> Edited Result</div>
+
+                <div class="image-container" id="result-container">
+                    <div class="spinner-overlay" id="loading-spinner">
+                        <div class="spinner"></div>
+                        <span class="spinner-text">Applying edit…</span>
+                    </div>
+                    <div class="image-placeholder" id="result-placeholder">
+                        <div class="icon">✏️</div>
+                        <p>Edited sketch will appear here</p>
+                    </div>
+                    <img id="result-image" src="" alt="Edited sketch" style="display:none">
+                </div>
+
+                <!-- Mask preview -->
+                <div style="margin-top: 1rem">
+                    <div class="card-title"><span class="icon">🎭</span> Region Mask</div>
+                    <div class="image-container" id="mask-container" style="aspect-ratio: 2; max-height: 200px">
+                        <div class="image-placeholder" id="mask-placeholder">
+                            <p style="font-size: 0.8rem">Mask preview</p>
+                        </div>
+                        <img id="mask-image" src="" alt="Region mask" style="display:none">
+                    </div>
+                </div>
+
+                <div class="prompt-info" id="prompt-info"></div>
+
+                <div style="margin-top: 1rem; display: flex; gap: 0.75rem">
+                    <button id="download-btn" class="btn btn-secondary" style="display:none">
+                        ⬇️ Download
+                    </button>
+                    <button id="use-as-input-btn" class="btn btn-secondary" style="display:none">
+                        🔄 Use as New Input
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/editor.js"></script>
+</body>
+
+</html>

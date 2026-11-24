@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="AI-Powered Forensic Sketch Generator — Generate suspect sketches from witness descriptions using Stable Diffusion">
+    <title>Forensic Sketch Generator — Generate</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ── Navigation ─────────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <div class="badge-icon">🔍</div>
+            <span>Forensic<span class="highlight">Sketch</span></span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/dashboard.html" id="nav-dashboard">📊 Dashboard</a></li>
+            <li><a href="/" class="active" id="nav-generate">🎨 Generate</a></li>
+            <li><a href="/editor.html" id="nav-editor">✏️ Editor</a></li>
+            <li><a href="/recognition.html" id="nav-recognition">🔎 Recognize</a></li>
+        </ul>
+        <div class="nav-user-area">
+            <span class="nav-username" id="nav-username"></span>
+            <button class="btn-logout" id="logout-btn" title="Logout">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <!-- ── Main Content ───────────────────────────────────────────────── -->
+    <main class="main-content">
+        <div class="section-header fade-in">
+            <h1>Generate <span class="accent">Forensic Sketch</span></h1>
+            <p>Describe the suspect's facial features and our AI will generate a detailed forensic composite sketch.</p>
+        </div>
+
+        <div class="grid-2">
+            <!-- ── LEFT: Controls ─────────────────────────────────────── -->
+            <div class="card fade-in" style="animation-delay: 0.1s">
+                <div class="card-title"><span class="icon">📝</span> Suspect Description</div>
+
+                <!-- Language selector -->
+                <div class="form-group">
+                    <label for="language-select">🌐 Input Language</label>
+                    <select id="language-select">
+                        <option value="en">🇬🇧 English</option>
+                        <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                        <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                    </select>
+                </div>
+
+                <!-- Free-text input -->
+                <div class="form-group">
+                    <label for="description-input">Witness Description</label>
+                    <div class="voice-input-wrapper">
+                        <textarea id="description-input"
+                            placeholder="Example: Male, age 30, sharp jawline, small eyes, long nose, thin lips, short curly hair, scar on left cheek"></textarea>
+                        <button type="button" class="mic-btn" id="mic-btn" title="Click to speak">🎤</button>
+                    </div>
+                    <div class="mic-status" id="mic-status">🔴 Listening…</div>
+                </div>
+
+                <!-- Attribute quick-selects -->
+                <div class="card-title" style="margin-top: 0.5rem">
+                    <span class="icon">⚙️</span> Quick Attributes
+                </div>
+
+                <div class="attribute-grid stagger">
+                    <div class="form-group">
+                        <label for="attr-gender">Gender</label>
+                        <select id="attr-gender">
+                            <option value="">— Select —</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="attr-age">Age</label>
+                        <input type="number" id="attr-age" placeholder="e.g. 30" min="5" max="90">
+                    </div>
+                    <div class="form-group">
+                        <label for="attr-hair">Hair</label>
+                        <select id="attr-hair">
+                            <option value="">— Select —</option>
+                            <option value="short straight">Short Straight</option>
+                            <option value="short curly">Short Curly</option>
+                            <option value="long straight">Long Straight</option>
+                            <option value="long wavy">Long Wavy</option>
+                            <option value="bald">Bald</option>
+                            <option value="afro">Afro</option>
+                            <option value="buzz cut">Buzz Cut</option>
+                            <option value="slicked back">Slicked Back</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="attr-eyes">Eyes</label>
+                        <select id="attr-eyes">
+                            <option value="">— Select —</option>
+                            <option value="small narrow">Small Narrow</option>
+                            <option value="large round">Large Round</option>
+                            <option value="almond">Almond</option>
+                            <option value="deep set">Deep Set</option>
+                            <option value="hooded">Hooded</option>
+                            <option value="wide set">Wide Set</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="attr-nose">Nose</label>
+                        <select id="attr-nose">
+                            <option value="">— Select —</option>
+                            <option value="long sharp">Long Sharp</option>
+                            <option value="short wide">Short Wide</option>
+                            <option value="pointed">Pointed</option>
+                            <option value="flat broad">Flat Broad</option>
+                            <option value="roman hooked">Roman Hooked</option>
+                            <option value="button">Button</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="attr-lips">Lips</label>
+                        <select id="attr-lips">
+                            <option value="">— Select —</option>
+                            <option value="thin">Thin</option>
+                            <option value="full thick">Full Thick</option>
+                            <option value="wide">Wide</option>
+                            <option value="heart shaped">Heart Shaped</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="attr-jaw">Jawline</label>
+                        <select id="attr-jaw">
+                            <option value="">— Select —</option>
+                            <option value="sharp angular">Sharp Angular</option>
+                            <option value="round soft">Round Soft</option>
+                            <option value="square strong">Square Strong</option>
+                            <option value="pointed">Pointed</option>
+                            <option value="wide prominent">Wide Prominent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="attr-beard">Facial Hair</label>
+                        <select id="attr-beard">
+                            <option value="">— Select —</option>
+                            <option value="clean shaven">Clean Shaven</option>
+                            <option value="stubble">Stubble</option>
+                            <option value="full beard">Full Beard</option>
+                            <option value="goatee">Goatee</option>
+                            <option value="thin mustache">Thin Mustache</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Seed / Steps -->
+                <div class="grid-2" style="margin-top: 1rem">
+                    <div class="form-group">
+                        <label for="seed-input">Seed (optional)</label>
+                        <input type="number" id="seed-input" placeholder="Random">
+                    </div>
+                    <div class="form-group">
+                        <label for="steps-input">Steps</label>
+                        <input type="number" id="steps-input" placeholder="20" min="10" max="50" value="20">
+                    </div>
+                </div>
+
+                <button id="generate-btn" class="btn btn-primary btn-full btn-lg" style="margin-top: 0.75rem">
+                    🎨 Generate Sketch
+                </button>
+            </div>
+
+            <!-- ── RIGHT: Result ──────────────────────────────────────── -->
+            <div class="card fade-in" style="animation-delay: 0.2s">
+                <div class="card-title"><span class="icon">🖼️</span> Generated Sketch</div>
+
+                <div class="image-container" id="result-container">
+                    <div class="spinner-overlay" id="loading-spinner">
+                        <div class="spinner"></div>
+                        <span class="spinner-text">Generating sketch…</span>
+                    </div>
+                    <div class="image-placeholder" id="result-placeholder">
+                        <div class="icon">🎭</div>
+                        <p>Your forensic sketch will appear here</p>
+                    </div>
+                    <img id="result-image" src="" alt="Generated forensic sketch" style="display:none">
+                </div>
+
+                <div class="prompt-info" id="prompt-info"></div>
+
+                <div style="margin-top: 1rem; display: flex; gap: 0.75rem">
+                    <button id="download-btn" class="btn btn-secondary" style="display:none">
+                        ⬇️ Download
+                    </button>
+                    <button id="edit-btn" class="btn btn-secondary" style="display:none">
+                        ✏️ Edit in Editor
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/generate.js"></script>
+</body>
+
+</html>
